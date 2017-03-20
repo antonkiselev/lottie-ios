@@ -11,6 +11,7 @@
 typedef enum : NSUInteger {
   LOTConstraintTypeAlignToBounds,
   LOTConstraintTypeAlignToLayer,
+  LOTConstraintTypeMatchReferenceView,
   LOTConstraintTypeNone
 } LOTConstraintType;
 

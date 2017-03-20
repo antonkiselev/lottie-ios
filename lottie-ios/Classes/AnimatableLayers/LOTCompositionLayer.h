@@ -20,6 +20,8 @@
 
 - (void)addSublayer:(LOTView *)view
        toLayerNamed:(NSString *)layer;
+- (void)addAnimatedSublayer:(LOTView *)view
+       toLayerNamed:(NSString *)layer;
 
 - (void)layoutCustomChildLayers;
 

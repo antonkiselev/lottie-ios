@@ -352,6 +352,17 @@
   [_compLayer addSublayer:view toLayerNamed:layer];
 }
 
+- (void)addAnimatedSubview:(LOTView *)view
+      toLayerNamed:(NSString *)layer {
+    [_compLayer addAnimatedSublayer:view toLayerNamed:layer];
+}
+
+- (void)handleSingleTap:(UITapGestureRecognizer *)recognizer {
+    CGPoint location = [recognizer locationInView:[recognizer.view superview]];
+    
+    //Do stuff here...
+}
+
 # pragma mark - Display Link
 
 - (void)startDisplayLink {

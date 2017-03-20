@@ -17,6 +17,7 @@
 
 @property (nonatomic, strong) LOTView *childView;
 @property (nonatomic, weak) LOTLayerView *layer;
+@property (nonatomic, weak) CALayer *referenceLayer;
 @property (nonatomic, assign) LOTConstraintType constraint;
 
 @end
@@ -119,6 +120,9 @@
         CGRect convertedBounds = [child.childView.layer.superlayer convertRect:selfBounds fromLayer:self];
         child.childView.layer.frame = convertedBounds;
       } break;
+      case LOTConstraintTypeMatchReferenceLayer:
+        child.childView.layer.frame = child.referenceLayer.bounds;
+        break;
       default:
         break;
     }
@@ -150,6 +154,35 @@
   }
   [_customLayers addObject:newChild];
   [self layoutCustomChildLayers];
+}
+
+- (void)addAnimatedSublayer:(LOTView *)view
+       toLayerNamed:(NSString *)layer {
+    LOTConstraintType constraint = LOTConstraintTypeMatchReferenceLayer;
+    LOTLayerView *layerObject = _layerNameMap[layer];
+    LOTCustomChild *newChild = [[LOTCustomChild alloc] init];
+    newChild.constraint = constraint;
+    newChild.childView = view;
+    
+    if (!layer) {
+        NSException* layerNotFoundExpection = [NSException exceptionWithName:@"LayerNotFoundException"
+                                                                      reason:@"The required layer was not specified."
+                                                                    userInfo:nil];
+        @throw layerNotFoundExpection;
+    } else {
+        CALayer *referenceLayer = layerObject.sublayers[0];
+        newChild.referenceLayer = referenceLayer;
+        referenceLayer.sublayers[0].backgroundColor = [UIColor clearColor].CGColor;
+        
+        [referenceLayer addSublayer:view.layer];
+        view.layer.frame = referenceLayer.bounds;
+    }
+    
+    if (!_customLayers) {
+        _customLayers = [NSMutableArray array];
+    }
+    [_customLayers addObject:newChild];
+    [self layoutCustomChildLayers];
 }
 
 @end
